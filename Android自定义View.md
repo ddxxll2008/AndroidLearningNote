@@ -1,3 +1,7 @@
+##绘制基础
+
+参考：[HenCoder Android 开发进阶: 自定义 View 1-1 绘制基础](http://hencoder.com/ui-1-1/)
+
 ##Paint详解
 
 参考：[HenCoder Android 开发进阶: 自定义 View 1-2 Paint 详解](http://hencoder.com/ui-1-2/)
@@ -33,3 +37,59 @@ StaticLayout：文字换行
 ###测量文字
 
 获取推荐行距，获取 Paint 的 FontMetrics（包括top, ascent, baseline, descent, bottom），获取文字显示范围，测量文字宽度，获取字符串中每个字符的宽度，获取设置宽度下的文字个数，以及光标相关的方法。
+
+##Canvas 对绘制的辅助 clipXXX() 和 Matrix
+参考[HenCoder Android 开发进阶：自定义 View 1-4 Canvas 对绘制的辅助 clipXXX() 和 Matrix](http://hencoder.com/ui-1-4/)
+
+###范围裁切clip
+
+###几何变换
+
+* 使用 Canvas 来做常见的二维变换
+* 使用 Matrix 来做常见和不常见的二维变换
+* 使用 Camera 来做三维变换
+
+##绘制顺序
+
+参考：[HenCoder Android 开发进阶：自定义 View 1-5 绘制顺序](http://hencoder.com/ui-1-5/)
+
+###绘制过程
+
+包括
+
+* 背景
+* 主体（onDraw()）
+* 子 View（dispatchDraw()）
+* 滑动边缘渐变和滑动条
+* 前景
+
+![image](https://ws4.sinaimg.cn/large/006tKfTcly1fiiwb2nr63j30ga0bddgg.jpg)
+
+```
+// View.java 的 draw() 方法的简化版大致结构（是大致结构，不是源码哦）：
+
+public void draw(Canvas canvas) {  
+    ...
+
+    drawBackground(Canvas); // 绘制背景（不能重写）
+    onDraw(Canvas); // 绘制主体
+    dispatchDraw(Canvas); // 绘制子 View
+    onDrawForeground(Canvas); // 绘制滑动相关和前景
+
+    ...
+}
+```
+
+![image](https://ws2.sinaimg.cn/large/006tKfTcly1fiix28rb6mj30ru0c8jsb.jpg)
+
+注意：
+
+* 出于效率的考虑，ViewGroup 默认会绕过 draw() 方法，换而直接执行 dispatchDraw()，以此来简化绘制流程。所以如果你自定义了某个 ViewGroup 的子类（比如 LinearLayout）并且需要在它的除  dispatchDraw() 以外的任何一个绘制方法内绘制内容，你可能会需要调用 View.setWillNotDraw(false) 这行代码来切换到完整的绘制流程（是「可能」而不是「必须」的原因是，有些 ViewGroup 是已经调用过 setWillNotDraw(false) 了的，例如 ScrollView）。
+* 有的时候，一段绘制代码写在不同的绘制方法中效果是一样的，这时你可以选一个自己喜欢或者习惯的绘制方法来重写。但有一个例外：如果绘制代码既可以写在 onDraw() 里，也可以写在其他绘制方法里，那么优先写在 onDraw() ，因为 Android 有相关的优化，可以在不需要重绘的时候自动跳过  onDraw() 的重复执行，以提升开发效率。享受这种优化的只有 onDraw() 一个方法。
+
+###总结
+
+![总结](https://ws3.sinaimg.cn/large/006tKfTcly1fii5jk7l19j30q70e0di5.jpg)
+
+* 在 ViewGroup 的子类中重写除 dispatchDraw() 以外的绘制方法时，可能需要调用  setWillNotDraw(false)；
+* 在重写的方法有多个选择时，优先选择 onDraw()。
