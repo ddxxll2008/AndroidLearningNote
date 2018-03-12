@@ -93,3 +93,29 @@ public void draw(Canvas canvas) {
 
 * 在 ViewGroup 的子类中重写除 dispatchDraw() 以外的绘制方法时，可能需要调用  setWillNotDraw(false)；
 * 在重写的方法有多个选择时，优先选择 onDraw()。
+
+##属性动画（上）
+
+参考：[HenCoder 自定义绘制的第 1-6 期：属性动画 Property Animation（上手篇）](http://hencoder.com/ui-1-6/)
+
+###Interpolator 
+
+其实就是速度设置器，设置动画运行的速度。
+
+##属性动画（下）
+
+参考：[HenCoder 自定义绘制的第 1-7 期：属性动画 Property Animation（进阶篇）](http://hencoder.com/ui-1-7/)
+
+###TypeEvaluator
+
+其他类型属性动画
+
+###ArgbEvaluator
+
+颜色渐变动画，在 Android 5.0 （API 21） 加入了新的方法 ofArgb()。
+
+###自定义 Evaluator
+
+###ofObject()
+
+借助于 TypeEvaluator，属性动画就可以通过 ofObject() 来对不限定类型的属性做动画了。
