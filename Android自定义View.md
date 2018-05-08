@@ -119,3 +119,29 @@ public void draw(Canvas canvas) {
 ###ofObject()
 
 借助于 TypeEvaluator，属性动画就可以通过 ofObject() 来对不限定类型的属性做动画了。
+
+TypeEvaluator：针对特殊的属性来做属性动画，它可以让你「做到本来做不到的动画」，针对复杂的属性关系来做动画，它可以让你「能做到的动画做起来更简单」
+
+###PropertyValuesHolder 同一个动画中改变多个属性
+
+如果有多个属性需要修改，可以把它们放在不同的 PropertyValuesHolder 中，然后使用 ofPropertyValuesHolder() 统一放进  Animator。
+
+###AnimatorSet 多个动画配合执行
+
+###PropertyValuesHolders.ofKeyframe() 把同一个属性拆分
+
+除了合并多个属性和调配多个动画，你还可以在 PropertyValuesHolder 的基础上更进一步，通过设置  Keyframe （关键帧），把同一个动画属性拆分成多个阶段。
+
+「关于复杂的属性关系来做动画」，就这么三种：
+
+* 使用 PropertyValuesHolder 来对多个属性同时做动画；
+* 使用 AnimatorSet 来同时管理调配多个动画；
+* PropertyValuesHolder 的进阶使用：使用 PropertyValuesHolder.ofKeyframe() 来把一个属性拆分成多段，执行更加精细的属性动画。
+
+###ValueAnimator 最基本的轮子
+
+ValueAnimator 就是一个不能指定目标对象版本的 ObjectAnimator。
+
+ViewPropertyAnimator、ObjectAnimator、ValueAnimator 这三种 Animator，它们其实是一种递进的关系：从左到右依次变得更加难用，也更加灵活。
+
+它们的性能是一样的，因为 ViewPropertyAnimator 和 ObjectAnimator 的内部实现其实都是 ValueAnimator，ObjectAnimator 更是本来就是 ValueAnimator 的子类，它们三个的性能并没有差别。它们的差别只是使用的便捷性以及功能的灵活性。所以在实际使用时候的选择，只要遵循一个原则就行：尽量用简单的。能用 View.animate() 实现就不用 ObjectAnimator，能用 ObjectAnimator 就不用 ValueAnimator。
